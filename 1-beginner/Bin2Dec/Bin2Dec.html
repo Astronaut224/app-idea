@@ -13,13 +13,17 @@
     <div class="body">
       <div class="item">
         <h4>转换数字</h4>
-        <input type="text" placeholder="请输入需要转换的二进制" maxlength="8" v-model="binNum">
+        <div>
+          <input type="text" placeholder="请输入需要转换的二进制" maxlength="8" v-model="binNum">
+          <i class="el-icon-error"></i>
+        </div>
       </div>
       <div class="item">
         <h4>转换结果</h4>
         <div class="input-group">
           <input type="text" v-model="decNum" id="res">
-          <button class="el-icon-document-copy" :data-clipboard-text="decNum" @click="resultCopy"></button>
+          <button class="el-icon-document-copy" v-if="flag>0" :data-clipboard-text="decNum" @click="resultCopy"></button>
+          <button class="el-icon-document-checked" v-if="flag<0" :data-clipboard-text="decNum" @click="resultCopy"></button>
         </div>
       </div>
     </div>
@@ -34,7 +38,8 @@
     data () {
       return {
         binNum: '',
-        decNum: ''
+        decNum: '',
+        flag: 1
       }
     },
 
@@ -48,6 +53,8 @@
         }
         this.binNum = arr.join('');
         this.bin2dec();
+        // 如果修改了输入的二进制数字，则初始化复制按钮
+        this.initCopy()
       },
     },
 
@@ -70,8 +77,8 @@
             message: '复制成功',
             type: 'success'
           })
-          e.delegateTarget.className = 'el-icon-document-checked';
-          setTimeout(clipboard.destroy(), 5000);
+          // e.delegateTarget.className = 'el-icon-document-checked';
+          this.flag = -1;
         });
         clipboard.on('error', () => {
           this.$message({
@@ -80,6 +87,10 @@
           })
           setTimeout(clipboard.destroy(), 5000);
         });
+      },
+
+      initCopy() {
+        this.flag = 1;
       }
     }
   })
@@ -127,6 +138,8 @@
     height: 30px;
     border-radius: 0px 25px 25px 0px;
     border: 1px solid #708090;
+    padding-bottom: 2px;
+    text-align: left;
   }
 
   .input-group input {
