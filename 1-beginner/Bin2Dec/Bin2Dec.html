@@ -13,9 +13,9 @@
     <div class="body">
       <div class="item">
         <h4>转换数字</h4>
-        <div>
+        <div class="binInput">
           <input type="text" placeholder="请输入需要转换的二进制" maxlength="8" v-model="binNum">
-          <i class="el-icon-error"></i>
+          <i class="el-icon-error click-cursor" v-if="binNum" @click="clearInput"></i>
         </div>
       </div>
       <div class="item">
@@ -91,6 +91,10 @@
 
       initCopy() {
         this.flag = 1;
+      },
+
+      clearInput () {
+        this.binNum = ''
       }
     }
   })
@@ -148,6 +152,17 @@
     outline: none;
     border: 1px solid #708090;
     border-radius: 25px 0px 0px 25px;
+  }
+
+  .binInput {
+    position: relative;
+  }
+
+  .click-cursor {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
   }
 </style>
 </body>
