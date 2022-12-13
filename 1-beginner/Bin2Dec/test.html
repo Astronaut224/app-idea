@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二进制转换十进制</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+  <div id="app">
+    <el-row>
+      <el-col>
+        <div class="title">二进制转换十进制</div>
+      </el-col>
+    </el-row>
+    <el-row class="body">
+      <el-col :xs="24" :sm="24" :lg="12" class="item">
+        <h4>转换数字</h4>
+        <div class="binInput">
+          <el-input type="text" placeholder="请输入需要转换的二进制" maxlength="8" v-model="binNum">
+          <template #suffix>
+            <i class="el-icon-error click-cursor" v-if="binNum" @click="clearInput"></i>
+          </template>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="12" class="item">
+        <h4>转换结果</h4>
+        <div class="input-group">
+          <el-input type="text" v-model="decNum" id="res">
+          <template #suffix>
+            <el-button class="el-icon-document-copy"  round v-if="flag>0" :data-clipboard-text="decNum"
+              @click="resultCopy"></el-button>
+            <el-button class="el-icon-document-checked" round v-if="flag<0" :data-clipboard-text="decNum"
+              @click="resultCopy"></el-button>
+          </template>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://clipboardjs.com/dist/clipboard.min.js"></script>
+  <script>
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        binNum: '',
+        decNum: '',
+        flag: 1
+      }
+    },
+
+    watch: {
+      // 监听用户输入二进制数字
+      binNum(newVal) {
+        // 只允许输入 0 或 1
+        let arr = newVal.split('');
+        if (arr[arr.length - 1] !== '0' && arr[arr.length - 1] !== '1') {
+          arr.pop();
+        }
+        this.binNum = arr.join('');
+        this.bin2dec();
+        // 如果修改了输入的二进制数字，则初始化复制按钮
+        this.initCopy()
+      },
+    },
+
+    methods: {
+      bin2dec () {
+        /* parseInt(string, radix)可以解析一个字符串，并返回一个整数
+           string是必填，需要被解析的字符串，string为空的话返回NaN
+           radix是选填，表示被解析的数字的基数，不填或填0默认为10 */
+        if (this.binNum) {
+          this.decNum = parseInt(this.binNum, 2).toString();
+        } else {
+          this.decNum = '';
+        }
+      },
+
+      resultCopy (e) {
+        let clipboard = new ClipboardJS('.el-icon-document-copy');
+        clipboard.on('success', () => {
+          this.$message({
+            message: '复制成功',
+            type: 'success'
+          })
+          // e.delegateTarget.className = 'el-icon-document-checked';
+          this.flag = -1;
+        });
+        clipboard.on('error', () => {
+          this.$message({
+            message: '复制失败',
+            type: 'warning'
+          })
+          setTimeout(clipboard.destroy(), 5000);
+        });
+      },
+
+      initCopy() {
+        this.flag = 1;
+      },
+
+      clearInput () {
+        this.binNum = ''
+      }
+    }
+  })
+</script>
+
+<style>
+  #app {
+    background: #F6F7FA;
+  }
+
+  .title {
+    width: 100%;
+    height: 100px;
+    background-color: #708090;
+    font-size: 50px;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: center;
+    line-height: 100px;
+  }
+
+  .body {
+    padding: 50px;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .el-input input {
+    width: 195px;
+    height: 26px;
+    outline: none;
+    border: 1px solid #708090;
+    border-radius: 25px;
+  }
+
+  .input-group {
+    margin-left: 170px;
+    position: relative;
+    width: 200px;
+  }
+
+  .input-group button {
+    /* cursor: pointer;
+    height: 30px;
+    border-radius: 0px 25px 25px 0px;
+    border: 1px solid #708090;
+    padding-bottom: 2px;
+    text-align: left; */
+    left: 30%;
+    padding: 7px 12px !important;
+    border: none;
+    margin: 2px 2px 0px 0px;
+  }
+
+  .input-group input {
+    position: absolute;
+    /* left: 60%; */
+    height: 32px;
+    outline: none;
+    border: 1px solid #708090;
+    border-radius: 25px;
+  }
+
+  .binInput {
+    position: relative;
+    left: 15%;
+    width: 235px;
+  }
+
+  .binInput input {
+    position: absolute;
+    height: 32px;
+    left: 25%;
+  }
+
+  .item {
+    position: relative;
+  }
+
+  .item h4 {
+    margin-left: 175px;
+  }
+
+  .click-cursor {
+    position: absolute;
+    left: 50%;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+</style>
+</body>
+</html>
