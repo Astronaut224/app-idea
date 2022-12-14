@@ -24,7 +24,7 @@
 
 ## 栗子
 
-![1671008570807](D:\workspace\app-idea\image\1671008570807.png)
+![123](https://github.com/Astronaut224/app-idea/blob/master/image/1671008570807.png?raw=true)
 
 ## 结语
 
